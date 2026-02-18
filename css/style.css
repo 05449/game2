@@ -1,0 +1,820 @@
+/* ===== 基本スタイル ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Meiryo', sans-serif;
+    background-color: #0a0a1a;
+    color: #ffffff;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ===== 画面共通 ===== */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ===== タイトル画面 ===== */
+.title-container {
+    text-align: center;
+    z-index: 10;
+}
+
+.game-title {
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    color: #00ffff;
+    text-shadow: 
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 40px #00ffff,
+        0 0 80px #00ffff;
+    animation: titlePulse 2s ease-in-out infinite;
+}
+
+.infinity {
+    color: #ff00ff;
+    text-shadow: 
+        0 0 10px #ff00ff,
+        0 0 20px #ff00ff,
+        0 0 40px #ff00ff;
+}
+
+@keyframes titlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.tagline {
+    font-size: 1.2rem;
+    color: #888;
+    margin-top: 0.5rem;
+    letter-spacing: 0.3em;
+}
+
+.menu-buttons {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.menu-btn {
+    background: transparent;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 250px;
+}
+
+.menu-btn:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        inset 0 0 10px rgba(0, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.menu-btn.primary {
+    background: rgba(0, 255, 255, 0.2);
+}
+
+.menu-btn:active {
+    transform: scale(0.98);
+}
+
+.best-score {
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff;
+}
+
+/* 背景パーティクル */
+.background-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ===== ゲーム画面 ===== */
+#game-screen {
+    background: #0a0a1a;
+}
+
+#game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.game-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.time-display, .best-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.time-display {
+    color: #00ffff;
+}
+
+.best-display {
+    color: #888;
+}
+
+/* スキルUI */
+.skill-container {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    z-index: 100;
+}
+
+.skill-item {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.skill-icon {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #00ffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.skill-icon:hover {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 15px #00ffff;
+}
+
+.skill-icon.disabled {
+    opacity: 0.5;
+    border-color: #444;
+    cursor: not-allowed;
+}
+
+.skill-cooldown {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: #ff00ff;
+}
+
+/* パワーアップインジケーター */
+.powerup-indicator {
+    position: absolute;
+    top: 4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 100;
+}
+
+.powerup-active {
+    padding: 0.3rem 0.8rem;
+    background: rgba(0, 255, 136, 0.3);
+    border: 1px solid #00ff88;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #00ff88;
+    animation: powerupPulse 1s ease-in-out infinite;
+}
+
+@keyframes powerupPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* カウントダウン */
+.countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    font-weight: 900;
+    color: #00ffff;
+    text-shadow: 
+        0 0 20px #00ffff,
+        0 0 40px #00ffff;
+    z-index: 200;
+    display: none;
+    animation: countdownPop 0.5s ease-out;
+}
+
+@keyframes countdownPop {
+    0% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* ニアミス表示 */
+.near-miss {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff00ff;
+    text-shadow: 
+        0 0 10px #ff00ff,
+        0 0 20px #ff00ff;
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.near-miss.show {
+    animation: nearMissAnim 0.8s ease-out forwards;
+}
+
+@keyframes nearMissAnim {
+    0% { 
+        opacity: 0; 
+        transform: translateX(-50%) translateY(20px) scale(0.5); 
+    }
+    20% { 
+        opacity: 1; 
+        transform: translateX(-50%) translateY(0) scale(1.2); 
+    }
+    100% { 
+        opacity: 0; 
+        transform: translateX(-50%) translateY(-30px) scale(1); 
+    }
+}
+
+/* ===== コンボ表示 ===== */
+.combo-display {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffff00;
+    text-shadow: 
+        0 0 10px currentColor,
+        0 0 20px currentColor,
+        0 0 30px currentColor;
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease-out;
+}
+
+.combo-display.show {
+    opacity: 1;
+    animation: comboPulse 0.3s ease-out;
+}
+
+@keyframes comboPulse {
+    0% { transform: translateX(-50%) scale(1.3); }
+    100% { transform: translateX(-50%) scale(1); }
+}
+
+/* ===== イベント警告 ===== */
+.event-warning {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 40px;
+    background: rgba(255, 0, 0, 0.3);
+    border: 2px solid #ff0000;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-out;
+}
+
+.event-warning.show {
+    opacity: 1;
+    animation: warningFlash 0.5s ease-in-out infinite;
+}
+
+.event-warning .warning-icon {
+    font-size: 2rem;
+    animation: warningShake 0.5s ease-in-out infinite;
+}
+
+@keyframes warningFlash {
+    0%, 100% { 
+        background: rgba(255, 0, 0, 0.3);
+        border-color: #ff0000;
+    }
+    50% { 
+        background: rgba(255, 0, 0, 0.5);
+        border-color: #ff6666;
+    }
+}
+
+@keyframes warningShake {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+/* ===== ポーズ画面 ===== */
+.pause-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+}
+
+.pause-container {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(10, 10, 26, 0.9);
+    border: 2px solid #00ffff;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+.pause-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #00ffff;
+    text-shadow: 
+        0 0 10px #00ffff,
+        0 0 20px #00ffff;
+    margin-bottom: 1rem;
+}
+
+.pause-hint {
+    color: #888;
+    margin-bottom: 2rem;
+}
+
+.pause-container .menu-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* ===== ゲームオーバー画面 ===== */
+.gameover-container {
+    text-align: center;
+    z-index: 10;
+}
+
+.gameover-title {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #ff3366;
+    text-shadow: 
+        0 0 10px #ff3366,
+        0 0 20px #ff3366;
+    margin-bottom: 2rem;
+    animation: gameoverShake 0.5s ease-out;
+}
+
+@keyframes gameoverShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+.result-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+}
+
+.result-item {
+    margin: 1rem 0;
+}
+
+.result-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 0.3rem;
+}
+
+.result-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+.new-record {
+    font-size: 1.5rem;
+    color: #ffcc00;
+    text-shadow: 0 0 10px #ffcc00;
+    margin-top: 1rem;
+    display: none;
+    animation: recordBounce 0.5s ease infinite;
+}
+
+.new-record.show {
+    display: block;
+}
+
+@keyframes recordBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.stats-box {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    color: #00ff88;
+}
+
+.gameover-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+/* ===== 設定画面 ===== */
+.settings-container, .ranking-container, .howto-container {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3rem;
+    border-radius: 15px;
+    border: 1px solid #333;
+    min-width: 400px;
+}
+
+.settings-title, .ranking-title, .howto-title {
+    font-size: 2rem;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #222;
+}
+
+.setting-item label {
+    color: #ccc;
+}
+
+.setting-item input[type="range"] {
+    width: 150px;
+    margin: 0 1rem;
+    accent-color: #00ffff;
+}
+
+.setting-item span {
+    min-width: 50px;
+    text-align: right;
+    color: #00ffff;
+}
+
+.setting-item select {
+    background: #1a1a3a;
+    color: #fff;
+    border: 1px solid #00ffff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.toggle-btn {
+    padding: 0.5rem 1.5rem;
+    border: 1px solid #00ffff;
+    background: transparent;
+    color: #00ffff;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.toggle-btn.on {
+    background: rgba(0, 255, 255, 0.3);
+}
+
+.toggle-btn.off {
+    border-color: #666;
+    color: #666;
+}
+
+/* ===== 操作説明画面 ===== */
+.howto-container {
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.howto-content {
+    margin-bottom: 2rem;
+}
+
+.howto-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333;
+}
+
+.howto-section h3 {
+    color: #ff00ff;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.howto-section p {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.control-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.control-key {
+    background: linear-gradient(135deg, #333, #1a1a1a);
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    font-family: monospace;
+    font-weight: bold;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.control-desc {
+    color: #aaa;
+}
+
+.item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #ccc;
+}
+
+.item-icon {
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+}
+
+.item-icon.shield { color: #00ff00; }
+.item-icon.slow { color: #00ffff; }
+.item-icon.shrink { color: #ffff00; }
+.item-icon.magnet { color: #ff00ff; }
+.item-icon.time { color: #ffa500; }
+
+/* ===== ランキング画面 ===== */
+.ranking-list {
+    margin-bottom: 2rem;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #222;
+}
+
+.ranking-item:nth-child(1) .ranking-rank {
+    color: #ffd700;
+}
+
+.ranking-item:nth-child(2) .ranking-rank {
+    color: #c0c0c0;
+}
+
+.ranking-item:nth-child(3) .ranking-rank {
+    color: #cd7f32;
+}
+
+.ranking-rank {
+    font-weight: bold;
+    color: #888;
+    width: 40px;
+}
+
+.ranking-time {
+    color: #00ffff;
+    font-weight: bold;
+}
+
+.total-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.total-stat {
+    text-align: center;
+}
+
+.total-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.total-value {
+    font-size: 1.2rem;
+    color: #00ff88;
+}
+
+/* ===== 画面シェイク ===== */
+.screen-shake {
+    animation: screenShake 0.3s ease-out;
+}
+
+@keyframes screenShake {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-5px, 5px); }
+    40% { transform: translate(5px, -5px); }
+    60% { transform: translate(-3px, 3px); }
+    80% { transform: translate(3px, -3px); }
+}
+
+/* ===== 警告フラッシュ ===== */
+.danger-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 50;
+    box-shadow: inset 0 0 100px rgba(255, 51, 102, 0);
+    transition: box-shadow 0.1s;
+}
+
+.danger-flash.active {
+    box-shadow: inset 0 0 100px rgba(255, 51, 102, 0.3);
+}
+
+/* ===== モバイル対応 ===== */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 3rem;
+    }
+    
+    .tagline {
+        font-size: 0.9rem;
+    }
+    
+    .menu-btn {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        min-width: 200px;
+    }
+    
+    .time-display, .best-display {
+        font-size: 1rem;
+    }
+    
+    .gameover-title {
+        font-size: 2.5rem;
+    }
+    
+    .result-value {
+        font-size: 2rem;
+    }
+    
+    .settings-container, .ranking-container {
+        min-width: 90vw;
+        padding: 2rem;
+    }
+    
+    .skill-item {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* ===== スクロールバー ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a3a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ffff;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00cccc;
+}

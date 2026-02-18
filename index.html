@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EVADE∞ - 避けゲー</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- タイトル画面 -->
+    <div id="title-screen" class="screen active">
+        <div class="title-container">
+            <h1 class="game-title">EVADE<span class="infinity">∞</span></h1>
+            <p class="tagline">1秒でも長く生き残れ</p>
+            
+            <div class="menu-buttons">
+                <button id="start-btn" class="menu-btn">▶ START</button>
+                <button id="howto-btn" class="menu-btn">❓ HOW TO PLAY</button>
+                <button id="ranking-btn" class="menu-btn">📊 RANKING</button>
+                <button id="settings-btn" class="menu-btn">⚙ SETTINGS</button>
+            </div>
+            
+            <div class="best-score">
+                BEST: <span id="title-best-time">00:00.00</span>
+            </div>
+        </div>
+        
+        <div class="background-particles" id="title-particles"></div>
+    </div>
+
+    <!-- ゲーム画面 -->
+    <div id="game-screen" class="screen">
+        <div class="game-ui">
+            <div class="ui-left">
+                <div class="time-display">
+                    TIME: <span id="current-time">00:00.00</span>
+                </div>
+            </div>
+            <div class="ui-right">
+                <div class="best-display">
+                    BEST: <span id="game-best-time">00:00.00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="skill-container">
+            <div class="skill-item">
+                <div class="skill-icon" id="skill-slow">⏱</div>
+                <div class="skill-cooldown" id="skill-slow-cd"></div>
+            </div>
+            <div class="skill-item">
+                <div class="skill-icon" id="skill-evade">💨</div>
+                <div class="skill-cooldown" id="skill-evade-cd"></div>
+            </div>
+        </div>
+        
+        <canvas id="game-canvas"></canvas>
+        
+        <div class="powerup-indicator" id="powerup-indicator"></div>
+        
+        <!-- 開始カウントダウン -->
+        <div id="countdown" class="countdown"></div>
+        
+        <!-- ニアミス表示 -->
+        <div id="near-miss" class="near-miss">NEAR MISS!</div>
+        
+        <!-- コンボ表示 -->
+        <div id="combo-display" class="combo-display"></div>
+        
+        <!-- ポーズ画面 -->
+        <div id="pause-overlay" class="pause-overlay">
+            <div class="pause-container">
+                <h2 class="pause-title">PAUSED</h2>
+                <p class="pause-hint">ESCキーで再開</p>
+                <button id="resume-btn" class="menu-btn">▶ 再開</button>
+                <button id="pause-title-btn" class="menu-btn">🏠 タイトル</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ゲームオーバー画面 -->
+    <div id="gameover-screen" class="screen">
+        <div class="gameover-container">
+            <h2 class="gameover-title">GAME OVER</h2>
+            
+            <div class="result-box">
+                <div class="result-item">
+                    <span class="result-label">YOUR TIME</span>
+                    <span class="result-value" id="result-time">00:00.00</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">BEST TIME</span>
+                    <span class="result-value" id="result-best">00:00.00</span>
+                </div>
+                <div class="new-record" id="new-record">🎉 NEW RECORD!</div>
+            </div>
+            
+            <div class="stats-box">
+                <div class="stat-item">
+                    <span class="stat-label">ニアミス</span>
+                    <span class="stat-value" id="stat-nearmiss">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">アイテム</span>
+                    <span class="stat-value" id="stat-items">0</span>
+                </div>
+            </div>
+            
+            <div class="gameover-buttons">
+                <button id="retry-btn" class="menu-btn primary">🔄 RETRY</button>
+                <button id="title-btn" class="menu-btn">🏠 TITLE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 設定画面 -->
+    <div id="settings-screen" class="screen">
+        <div class="settings-container">
+            <h2 class="settings-title">SETTINGS</h2>
+            
+            <div class="setting-item">
+                <label>BGM音量</label>
+                <input type="range" id="bgm-volume" min="0" max="100" value="80">
+                <span id="bgm-value">80%</span>
+            </div>
+            
+            <div class="setting-item">
+                <label>SE音量</label>
+                <input type="range" id="se-volume" min="0" max="100" value="100">
+                <span id="se-value">100%</span>
+            </div>
+            
+            <div class="setting-item">
+                <label>画面シェイク</label>
+                <button id="shake-toggle" class="toggle-btn on">ON</button>
+            </div>
+            
+            <div class="setting-item">
+                <label>パーティクル</label>
+                <select id="particle-level">
+                    <option value="low">低</option>
+                    <option value="medium">中</option>
+                    <option value="high" selected>高</option>
+                </select>
+            </div>
+            
+            <button id="settings-back-btn" class="menu-btn">← 戻る</button>
+        </div>
+    </div>
+
+    <!-- 操作説明画面 -->
+    <div id="howto-screen" class="screen">
+        <div class="howto-container">
+            <h2 class="howto-title">HOW TO PLAY</h2>
+            
+            <div class="howto-content">
+                <div class="howto-section">
+                    <h3>🎯 目的</h3>
+                    <p>障害物を避けて、できるだけ長く生き残れ！</p>
+                </div>
+                
+                <div class="howto-section">
+                    <h3>🖱️ 操作方法</h3>
+                    <div class="control-list">
+                        <div class="control-item">
+                            <span class="control-key">マウス移動</span>
+                            <span class="control-desc">プレイヤーを操作</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">SPACE</span>
+                            <span class="control-desc">スローモーション（20秒CD）</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">SHIFT</span>
+                            <span class="control-desc">緊急回避（30秒CD）</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">ESC</span>
+                            <span class="control-desc">ポーズ</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="howto-section">
+                    <h3>⚡ アイテム</h3>
+                    <div class="item-list">
+                        <div class="item-info"><span class="item-icon shield">●</span> シールド - 一度だけ被弾を防ぐ</div>
+                        <div class="item-info"><span class="item-icon slow">●</span> スロー - 敵の速度低下</div>
+                        <div class="item-info"><span class="item-icon shrink">●</span> シュリンク - 当たり判定縮小</div>
+                        <div class="item-info"><span class="item-icon magnet">●</span> マグネット - アイテム吸引</div>
+                        <div class="item-info"><span class="item-icon time">●</span> タイムボーナス - +3秒追加</div>
+                    </div>
+                </div>
+                
+                <div class="howto-section">
+                    <h3>💡 ヒント</h3>
+                    <p>敵ギリギリを避ける「ニアミス」でボーナス！<br>連続ニアミスでコンボボーナス！</p>
+                </div>
+            </div>
+            
+            <button id="howto-back-btn" class="menu-btn">← 戻る</button>
+        </div>
+    </div>
+
+    <!-- ランキング画面 -->
+    <div id="ranking-screen" class="screen">
+        <div class="ranking-container">
+            <h2 class="ranking-title">RANKING</h2>
+            
+            <div class="ranking-list" id="ranking-list">
+                <!-- ランキングが動的に挿入される -->
+            </div>
+            
+            <div class="total-stats">
+                <div class="total-stat">
+                    <span class="total-label">総プレイ時間</span>
+                    <span class="total-value" id="total-playtime">00:00:00</span>
+                </div>
+                <div class="total-stat">
+                    <span class="total-label">総プレイ回数</span>
+                    <span class="total-value" id="total-plays">0</span>
+                </div>
+            </div>
+            
+            <button id="ranking-back-btn" class="menu-btn">← 戻る</button>
+        </div>
+    </div>
+
+    <!-- スクリプト読み込み -->
+    <script src="js/storage.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/particle.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/obstacle.js"></script>
+    <script src="js/powerup.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
